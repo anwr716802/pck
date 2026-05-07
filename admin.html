@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة التحكم</title>
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+
+</head>
+<body>
+
+<h2>إضافة شخص</h2>
+
+<input id="name" placeholder="الاسم"><br><br>
+<input id="job" placeholder="المهنة"><br><br>
+<input id="phone" placeholder="الرقم"><br><br>
+
+<input type="file" id="image"><br><br>
+
+<button onclick="send()">حفظ</button>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycby6k3CcS_hCbcKXHffBGjucwGtu87-vRVZ4f9sjnzLByTmC9dUaMoP09zgNXZd1fCvNeg/exec";
+const TOKEN = "123456";
+
+const CLOUD_NAME = "dxjzks7xl";
+
+function send() {
+  const file = document.getElementById("image").files[0];
+
+  // 1) رفع الصورة إلى Cloudinary
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(imgData => {
+
+    const imageUrl = imgData.secure_url;
+
+    // 2) إرسال البيانات إلى Google Sheets
+    return fetch(API_URL, {
+  method: "POST",
+  body: JSON.stringify({
+    token: TOKEN,
+    action: "add", // <-- هذا الناقص
+    name: document.getElementById("name").value,
+    job: document.getElementById("job").value,
+    phone: document.getElementById("phone").value,
+    image: imageUrl,
+    status: "published"
+  })
+});
+
+  })
+  .then(res => res.json())
+.then(data => {
+  console.log(data);
+
+  if (data.success) {
+    alert("تم الحفظ فعلاً");
+  } else {
+    alert("فشل: " + data.message);
+  }
+})
+.catch(err => {
+  alert("خطأ: " + err);
+});
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>الدليل</title>
+  <style>
+    body { font-family: Arial; direction: rtl; padding:20px; }
+    .card { border:1px solid #ccc; padding:10px; margin:10px 0; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script>
+
+</head>
+<body>
+
+<h2>قائمة الأشخاص</h2>
+<div id="list"></div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/XXXX/exec?action=get";
+
+fetch(API_URL)
+  .then(res => res.json())
+  .then(data => {
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+    data.forEach(item => {
+      list.innerHTML += `
+        <div class="card">
+          <strong>${item.name}</strong><br>
+          ${item.job}<br>
+          📞 ${item.phone}
+        </div>
+      `;
+    });
+  });
+</script>
+
+</body>
+</html>
