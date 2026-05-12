@@ -34,9 +34,14 @@ fetch(API_URL)
       list.innerHTML += `
         <div class="card">
           <img src="${item.image}">
-          <strong>${item.name}</strong><br>
-          ${item.job}<br>
-          📞 ${item.phone}
+          <div class="card-body">
+            <div class="name">${item.name}</div>
+            <div class="price">${item.job} ريال</div>
+            <a class="btn" target="_blank"
+              href="https://wa.me/${item.phone}?text=اريد شراء ${item.name}">
+              اطلب الآن
+            </a>
+          </div>
         </div>
       `;
     });
@@ -45,7 +50,6 @@ fetch(API_URL)
   .catch(err => {
     console.log(err);
   });
-</script>
 </script>
 <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
 <script>eruda.init();</script>
